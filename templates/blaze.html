@@ -1,0 +1,534 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Blaze</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.3/css/mdb.min.css" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.3/js/mdb.min.js"></script>-->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'psite/blaze.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'psite/sections.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'psite/section3.css' %}">
+
+</head>
+
+<body>
+
+    <!--Navbar Start-->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid navbar_container">
+
+            <!--Logo-->
+            <div class="navbar-header">
+                <button type="button" id="toggle_button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
+                    <div id="toggle_front">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </div>
+                    <div id="toggle_back">
+                        &times;
+                    </div>
+                </button>
+                <a href="#" class="navbar-brand"><img width="30" height="30" src="{% static 'psite/images/favicon.png' %}" ></a>
+            </div>
+
+
+            <!--Menu Items-->
+
+            <div class="collapse navbar-collapse" id="mainNavBar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <!--<li><a href="#">About Me</a></li>-->
+                    <!--<li><a href="#">Contact</a></li>-->
+
+                    <!--Dropdown-->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About Me<span class="caret"></span></a>
+                        <ul class="dropdown-menu fade in">
+                            <li><a href="#">Git</a></li>
+                            <li><a href="#">Social Media</a></li>
+                            <li><a href="#">LinkedIn</a></li>
+                            <li><a href="#">CV</a></li>
+                        </ul>
+                    </li>
+                    <li><a id="about-this-site-button" href="#">About This Site</a></li>
+                    <li><a href="{% url 'psite:add-project' %}">Add</a></li>
+                </ul>
+
+                <!--right align-->
+                <ul class="nav navbar-nav navbar-right subscribe">
+                    <li><a id="subscribe" data-toggle="modal" data-target="#popUpWindow">Subscribe!</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <!--Modal-->
+    <div id="popUpWindow" class="modal fade sub_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3>Please give your Name and Email</h3>
+                </div>
+
+                <div class="modal-body">
+
+                    <form role="form" action="{% url 'psite:subscribe' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" name="name" class="form-control" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" placeholder="E-mail">
+                        </div>
+                        <div class="form-group">
+                            <input type="Submit" class="form-control btn btn-success" placeholder="Submit">
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if sub_status == 1 %}
+    <!--Subscription Modal>-->
+        <div class="modal show fade" style="text-align: center;" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button id="close" type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3>Thanks For Subscription&nbsp;<i class="fa fa-smile-o" aria-hidden="true"></i></h3>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <h4> A confirmation link has been sent to your E-mail id. </h4>
+                        <h4>Please click on it for validation</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#myModal').modal('show');
+            });
+            $('#close').click(function(e){
+                window.location = "http://localhost:8000/psite"
+            });
+        </script>
+    <!--End Subscription Modal-->
+    {% endif %}
+
+    {% if sub_status == 2 %}
+    <!--Subscription unsuccessful Modal -->
+    <!--<script>alert("Hello")</script>-->
+        <div class="modal show fade" style="text-align: center;" id="myModal1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="closeu" type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3>Looks like there's an Error&nbsp;<i class="fa fa-frown-o" aria-hidden="true"></i></h3>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <h4>It seams that the email id is already in use.</h4>
+                        <h4>Please try again with different email.</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#myModal1').modal('show');
+            });
+            $('#closeu').click(function(e){
+                window.location = "http://localhost:8000/psite"
+            });
+        </script>
+    <!--End Subscription unsuccessful Modal -->
+    {% endif %}
+
+
+
+    <!--End Navbar-->
+
+    <div class="pimgv video-wrap" id="video-wrap">
+        <div class="video-wrap-color"></div>
+        <div id="title"></div>
+        <video autoplay loop id="my-video">
+            <source src="{% static 'psite/images/cvideo2.mp4' %}" type="video/mp4">
+            <source src="{% static 'psite/images/cvideo4.webm' %}" type="video/mp4">
+        </video>
+
+        <div class="ptext" >
+            <div class="pulsating-wrapper" id="click">
+                <div id="pulse_border">
+                    <span class="border">
+                Enter The Blaze
+            </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="my_section section-light" id="section_1">
+        <p class="section-head" id="section-1"></p>
+        <div class="container-fluid intro-container" >
+            <div class="row section1_row">
+                <div class="col-md-6" id="intro_section">
+                    <div id="traingle_top_right"></div>
+                    <div class="intro_elab_head intro_elab_head_left">Me:</div>
+                    <div class="blaze_pic_wrapper">
+                        <img id="blaze_pic" src="{% static 'psite/images/blaze2.jpg' %}" height="278" width="208" >
+                        <div id="blaze_pic_comment"><p>Yep,<br>That's<br>Me</p></div>
+                    </div>
+                    <div id="blaze_bio_wrapper">
+                        <h2 class="blaze_name">Name? &nbsp;<i class="fa fa-hand-o-right" aria-hidden="true"></i> &nbsp;Blaze</h2>
+                        <div id="blaze_interest">And stuff I'm interested in:</div>
+                        <div class="checklist_wrapper">
+                        <p class="blaze_quality" ><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;&nbsp;
+                            &nbsp;&nbsp;Programming</p>
+                        <p class="blaze_quality" ><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;&nbsp;
+                            &nbsp;&nbsp;Web Development ... maybe</p>
+                        <p class="blaze_quality" ><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;&nbsp;
+                            &nbsp;&nbsp;AI</p>
+                        <p class="blaze_quality" ><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;&nbsp;
+                            &nbsp;&nbsp;Cosmos</p>
+                        <p class="blaze_quality" ><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;&nbsp;
+                            &nbsp;&nbsp;Hacking</p>
+                        <p class="blaze_quality" ><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;&nbsp;
+                            &nbsp;&nbsp;TV Series</p>
+                        <p class="blaze_quality" ><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;&nbsp;
+                            &nbsp;&nbsp;Sleeping?</p>
+                        </div>
+                    </div>
+                    <div id="triangle_bottom_right" ></div>
+                </div>
+                <div class="col-md-6 blaze-bio-beneath" >
+                    <div class="blaze-bio-beneath-container">
+
+                        <div class="beneath-header" ><p>Things that went good so far... Yayyy?</p></div>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-1" ></div>
+                                <div class="col-xs-10" >
+
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;This Site?
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;Life, I guess..
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;HackerRank: 11000, yeah 11 Thousand with a big K
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;Definitely Rick And Morty
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;Investment in Bitcoin. Wait,.. how do you delete stuff from here??
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;Silver Badge on StackOverflow.
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;Yeah, that's all.
+                                    </div>
+                                </div>
+                                <div class="col-xs-1" ></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6 elaborate_beneath" >
+
+                    <div class="blaze-bio-beneath-container">
+
+                        <div class="beneath-header" ><p>Things that went bad so far... yeaayy.</p></div>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-1" ></div>
+                                <div class="col-xs-10" >
+
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;This Site?
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;Life, I guess..
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;DC comics.
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;My march for Machine Learning.
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;Yep, definitely my grades
+                                    </div>
+                                    <div class="good-things">
+                                        <i class="fa fa-rocket" aria-hidden="true"></i>&nbsp;&nbsp;And, yes, that's all.
+                                    </div>
+                                </div>
+                                <div class="col-xs-1" ></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-md-6" id="elaborate_section">
+                    <div id="triangle_top_left"></div>
+                    <div class="elaborate_section_sub elaborate_section_sub_top">
+                        <div class="intro_elab_head intro_elab_head_right" >Things I Know</div>
+                        <div class="container-fluid" >
+                            <div class="row">
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;&nbsp;Java
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;&nbsp;Python
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;&nbsp;Html & CSS
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;&nbsp;Javascript & JQuery
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;&nbsp;Django
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;&nbsp;PHP
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;&nbsp;Numpy & Pandas
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;&nbsp;Hadoop
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="elaborate_section_sub elaborate_section_sub_bottom">
+                        <div class="intro_elab_head intro_elab_head_right" >Things I ought to know</div>
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-anchor" aria-hidden="true"></i>&nbsp;&nbsp;Machine Learning
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-anchor" aria-hidden="true"></i>&nbsp;&nbsp;Image Processing
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-anchor" aria-hidden="true"></i>&nbsp;&nbsp;VAPT
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-anchor" aria-hidden="true"></i>&nbsp;&nbsp;Adv. Hadoop
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-anchor" aria-hidden="true"></i>&nbsp;&nbsp;Adv. Backend
+                                </div>
+                                <div class="col-xs-6 things-know-dknow">
+                                    <i class="fa fa-anchor" aria-hidden="true"></i>&nbsp;&nbsp;Scikit Learn
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="triangle_bottom_left" ></div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="pimg2">
+
+        <div class="ptext">
+            <span class="border trans">
+                Scratch any cynic and you'll find a disappointed idealist.
+            </span>
+        </div>
+    </div>
+
+    <section class="my_section section-dark">
+        <p class="section-head se">Projects</p><br>
+        <div class="container-fluid project_container">
+            <div class="row">
+                {% for project in projects %}
+                    <div class="col-sm-1" ></div>
+                    <div class="col-md-3 col-sm-5 project_div">
+                        <div class="triangle-bottomleft" ></div>
+                        <div class="zimgc-wrap">
+                            <div class="zimgc">
+                                <div class="inner-div-zimgc" >
+                                    <p class="inner-zimgc-subh" >Made Using&nbsp;&nbsp;<span class="glyphicon glyphicon-paperclip"></span>&nbsp;:</p>
+                                    <p class="inner-zimgc-content">{{ project.resources_used }}</p>
+                                    <p class="inner-zimgc-subh">Github Repo&nbsp;&nbsp;<span class="glyphicon glyphicon-tag"></span>&nbsp;:</p>
+                                    {% if project.repo != "none" %}
+                                        <p class="inner-zimgc-content"><a href="{{project.repo}}" >Repository</a></p>
+                                    {% else %}
+                                        <p class="inner-zimgc-content" >Sorry, no repository for this project.</p>
+                                    {% endif %}
+                                </div>
+                                <div class="image-wrap">
+                                <img  src="{{ project.cover.url }}" width="250" height="300">
+                                </div>
+                                {{ count.increase }}
+                            </div>
+                        </div>
+                        <h2><i class="fa fa-cube" aria-hidden="true"></i>&nbsp;&nbsp;{{project.title}}</h2>
+
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </section>
+
+    <div class="pimg3">
+
+        <div class="ptext">
+            <span class="border trans">
+                Some people see the glass half full while others see it as half empty.<br>
+                I see a glass that's twice as big as it needs to be.
+            </span>
+        </div>
+    </div>
+
+    <section class="my_section section-dark section3">
+        <p class="section-head" id="about-this-site">About This Site</p>
+        <div class="container section3-main-div">
+            <p>
+                abc
+            </p>
+        </div>
+
+    </section>
+
+    <div class="pimg1">
+
+        <div class="ptext">
+            <span class="border trans">
+                Your barber can kill you in any way he freaking wants. <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>-Blaze</i>
+            </span>
+        </div>
+        <!--<footer>
+
+            <h1>Thanks</h1>
+        </footer>-->
+    </div>
+
+
+    <script>
+        /* $(document).ready(function () {
+                    $(window).on('load scroll', function () {
+                        var scrolled = $(this).scrollTop();
+                        $('#title').css({
+                            'transform': 'translate3d(0, ' + -(scrolled * 0.2) + 'px, 0)', // parallax (20% scroll rate)
+                            'opacity': 1 - scrolled / 400 // fade out at 400px from top
+                        });
+                        $('#my_video').css('transform', 'translate3d(0, ' + -(scrolled * 0.25) + 'px, 0)'); // parallax (25% scroll rate)
+                    });
+                });*/
+
+        $('#click').click(function(e) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $("#section-1").offset().top - 120
+            }, 1000);
+        });
+
+        $('#toggle_button').click(function(e) {
+            if ($(this).css('transform') == 'none') {
+                $(this).css({
+                    'transform': 'rotateY( 180deg)'
+                });
+            } else {
+                $(this).css({
+                    'transform': ''
+                });
+            };
+        });
+        $('.zimgc').click(function(e) {
+            if ($(this).css('transform') == 'none') {
+                $(this).css({
+                    'transform': 'rotateY( 180deg)'
+                });
+            } else {
+                $(this).css({
+                    'transform': ''
+                });
+            };
+        });
+
+        $('.project_div').hover(function(e){
+             $(this).find('.triangle-bottomleft').css('transform', 'rotateZ(180deg) scale(0.6, 0.6) translate(30px, 30px)');
+            $(this).find('.triangle-bottomleft').off('hover');
+        });
+        $('.project_div').mouseleave(function(e){
+
+            $(this).find('.triangle-bottomleft').css('transform', '');
+        });
+        $('#intro_section').click(function(e){
+           if( $(this).css('transform') == 'none'){
+                if( window.screen.width <= 768 || $(window).width() <= 786 ) {
+                    $(this).css('transform', 'translateY(100%)');
+                } else{
+                    $(this).css('transform', 'translateX(100%)');
+                }
+           } else{
+               $(this).css('transform', '');
+           }
+        });
+        $('.blaze-bio-beneath').click(function(e){
+           $('#intro_section').css('transform', '');
+        });
+        $('#elaborate_section').click(function(e){
+
+            if( $(this).css('transform')  == 'none'){
+                if ( window.screen.width <= 768 || $(window).width() <= 786 ) {
+                    $(this).css('transform', 'translateY(-100%)');
+                } else{
+                    $(this).css('transform', 'translateX(-100%)');
+                }
+            }
+            else{
+                $(this).css('transform', 'none');
+            }
+
+        });
+        $('.elaborate_beneath').click(function(e){
+           $('#elaborate_section').css('transform', '');
+        });
+
+        $('#about-this-site-button').click(function(e) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $("#about-this-site").offset().top - 120
+            }, 700);
+        });
+    </script>
+
+</body>
+
+</html>
